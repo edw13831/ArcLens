@@ -1,4 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-search',
@@ -10,12 +12,12 @@ import { Component, Output, EventEmitter } from '@angular/core';
 export class SearchComponent {
   @Output() search = new EventEmitter<string>();
 
-  onSearch(event: any) {
-    this.search.emit(event.target.value);
-  }
+  constructor(private router: Router) {}
 
-  // onSearchClick() {
-  //   const inputElement = document.querySelector('.search-input') as HTMLInputElement;
-  //   this.search.emit(inputElement.value);
-  // }
+
+  onSearch(event: any) {
+    const query = event.target.value;
+    this.search.emit(query);
+    this.router.navigate(['/map'], { queryParams: { query } });
+  }
 }
