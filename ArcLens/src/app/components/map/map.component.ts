@@ -3,6 +3,9 @@ import WebMap from '@arcgis/core/WebMap';
 import MapView from '@arcgis/core/views/MapView';
 import WebScene from '@arcgis/core/WebScene';
 import SceneView from '@arcgis/core/views/SceneView';
+// import Daylight from 'esri/widgets/Daylight';
+import Daylight from '@arcgis/core/widgets/Daylight';
+import Expand from '@arcgis/core/widgets/Expand';
 
 @Component({
   selector: 'app-map',
@@ -36,7 +39,7 @@ export class MapComponent implements OnInit {
 
     const scene = new WebScene({
       portalItem: {
-        id: "c8cf26d7acab4e45afcd5e20080983c1"
+        id: "828ad330a1424e95b2ac35a5a5491bb0"
       }
     });
 
@@ -53,6 +56,19 @@ export class MapComponent implements OnInit {
     switchButton.addEventListener("click", () => {
       this.switchView(appConfig, switchButton);
     });
+
+    const daylight = new Daylight({
+      view: appConfig.sceneView,
+      // plays the animation twice as fast than the default one
+      playSpeedMultiplier: 2,
+      // disable the timezone selection button
+      visibleElements: {
+        timezone: false
+      }
+    });
+
+    // Add widget inside an Expand widget to be able to hide it on devices with small screens
+    appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
   }
 
   // Switches the view from 2D to 3D and vice versa
