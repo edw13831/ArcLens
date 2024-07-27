@@ -3,85 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcLens - Search</title>
+    <title>Webpage Design</title>
     <style>
-        * {
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(to bottom, #ffecd2, #ff6f00);
-        }
-        a {
-            text-decoration: none;
-            color: rgb(0, 0, 0);
-        }
-        .screen {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             width: 100%;
             height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #fae8e0; /* Background color matching the image */
+        }
+
+        .background {
+            background-image: url('Homescreen.png'); /* Use your background image */
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .logo {
             position: absolute;
             top: 20px;
             left: 20px;
-            width: 80px;
+            width: 60px; /* Adjust the size as needed */
             height: auto;
         }
 
+        .search-bar-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+        }
+
         .search-bar {
+            width: 30rem;
             display: flex;
             align-items: center;
-            background-color: white;
-            border-radius: 15px;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f4c29f;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .search-bar input {
             border: none;
-            padding: 10px;
-            border-radius: 20px;
-            margin: 0 10px;
-            flex: 1;
-        }
-
-        .menu-btn, .search-btn, .logout-btn {
+            outline: none;
             background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
+            margin: 0 10px;
+            width: 200px;
+            font-size: 16px;
         }
 
-        .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
+        .menu-icon, .search-icon {
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="search-screen" class="screen">
-        <!-- <img src="logo.png" alt="ArcLens Logo" class="logo"> -->
-        <div class="search-bar">
-            <button class="menu-btn">&#9776;</button>
-            <input type="text" placeholder="ESRI Headquarters">
-            <button class="search-btn">&#128269;</button>
+    <div class="background">
+        <div class="search-bar-container">
+            <div class="search-bar">
+                <span class="menu-icon">&#9776;</span>
+                <input type="text" placeholder="Search...">
+                <span class="search-icon">&#128269;</span>
+            </div>
         </div>
-        <button class="logout-btn"><a href="/app/signin.html">&#x27A1;</a></button>
     </div>
+    
+    
 </body>
 </html>
+
