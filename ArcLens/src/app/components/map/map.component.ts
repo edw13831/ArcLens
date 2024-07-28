@@ -26,14 +26,14 @@ export class MapComponent implements OnInit {
     };
  
     const initialViewParams = {
-      zoom: 12,
-      center: [-122.43759993450347, 37.772798684981126],
+      zoom: 5,
+      center: [2.3522, 48.8566],
       container: appConfig.container
     };
  
     const webmap = new WebMap({
       portalItem: {
-        id: "a2ded8d0bf4245e4923b898af67b8291"
+        id: "ce04efd930424dc38b5eff6db0f260d9"
       }
     });
  
@@ -66,6 +66,9 @@ export class MapComponent implements OnInit {
         timezone: false
       }
     });
+    // Add widget inside an Expand widget to be able to hide it on devices with small screens
+    appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
+
     // Add widget inside an Expand widget to be able to hide it on devices with small screens
     appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
   }
