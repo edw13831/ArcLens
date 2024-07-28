@@ -5,17 +5,43 @@ import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import RouteParameters from '@arcgis/core/rest/support/RouteParameters';
 import FeatureSet from '@arcgis/core/rest/support/FeatureSet';
 import Graphic from '@arcgis/core/Graphic';
-import * as route from "@arcgis/core/rest/route.js"
+import * as route from "@arcgis/core/rest/route.js";
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol';
+import { CommonModule } from '@angular/common';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-map',
   standalone: true,
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatCheckboxModule
+  ],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
+  filterOptions = [
+    { label: 'Castle', checked: false },
+    { label: 'Notable...', checked: false },
+    { label: 'Less than 1K', checked: false },
+    { label: '10K - 50K', checked: false },
+    { label: '50K', checked: false },
+    { label: '100K', checked: false }
+  ];
 
   private routeUrl = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World";
   private routeLayer: GraphicsLayer = new GraphicsLayer();
@@ -53,8 +79,6 @@ export class MapComponent implements OnInit {
       zoom: 12,
       center: [2.3522, 48.8566]
     });
-    // Add widget inside an Expand widget to be able to hide it on devices with small screens
-    appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
 
     mapView.on("click", (event) => this.addStop(event));
   }
@@ -78,4 +102,14 @@ export class MapComponent implements OnInit {
     routeResult.symbol = this.routeSymbol;
     this.routeLayer.add(routeResult);
   }
+
+  showMore(): void {
+    console.log('Show more filters...');
+    // Implement functionality to show more filters if needed
+  }
+
+  doSomething($event:any){
+    $event.stopPropagation();
+    //Another instructions
+}
 }
