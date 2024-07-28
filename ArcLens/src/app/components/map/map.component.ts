@@ -6,7 +6,7 @@ import SceneView from '@arcgis/core/views/SceneView';
 // import Daylight from 'esri/widgets/Daylight';
 import Daylight from '@arcgis/core/widgets/Daylight';
 import Expand from '@arcgis/core/widgets/Expand';
- 
+
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -56,7 +56,7 @@ export class MapComponent implements OnInit {
     switchButton.addEventListener("click", () => {
       this.switchView(appConfig, switchButton);
     });
- 
+
     const daylight = new Daylight({
       view: appConfig.sceneView,
       // plays the animation twice as fast than the default one
@@ -66,7 +66,6 @@ export class MapComponent implements OnInit {
         timezone: false
       }
     });
- 
     // Add widget inside an Expand widget to be able to hide it on devices with small screens
     appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
   }
