@@ -1,106 +1,79 @@
 import { Component, OnInit } from '@angular/core';
 import WebMap from '@arcgis/core/WebMap';
 import MapView from '@arcgis/core/views/MapView';
-import WebScene from '@arcgis/core/WebScene';
-import SceneView from '@arcgis/core/views/SceneView';
-// import Daylight from 'esri/widgets/Daylight';
-import Daylight from '@arcgis/core/widgets/Daylight';
-import Expand from '@arcgis/core/widgets/Expand';
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
+import RouteParameters from '@arcgis/core/rest/support/RouteParameters';
+import FeatureSet from '@arcgis/core/rest/support/FeatureSet';
+import Graphic from '@arcgis/core/Graphic';
+import * as route from "@arcgis/core/rest/route.js"
+import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
+import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol';
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
+
+  private routeUrl = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World";
+  private routeLayer: GraphicsLayer = new GraphicsLayer();
+
+  private routeParams: RouteParameters = new RouteParameters({
+    apiKey: "AAPK5c928794591042709bc8fbfe5277f506L61TaOqI9tSpQ14zCyIoUivahGVw1OMcUR_gRPn38GmmQjsm8FqS9y0ak5mmdNjh",
+    stops: new FeatureSet(),
+    outSpatialReference: {
+      wkid: 3857
+    }
+  });
+
+  private stopSymbol: SimpleMarkerSymbol = new SimpleMarkerSymbol({
+    style: "circle",
+    size: 7,
+  });
+
+  private routeSymbol: SimpleLineSymbol = new SimpleLineSymbol({
+    color: [0, 0, 255, 0.5],
+    style: "dash",
+    width: 2
+  });
+
   ngOnInit(): void {
-    const switchButton = document.getElementById('switch-btn') as HTMLButtonElement;
- 
-    const appConfig = {
-      mapView: null as unknown as MapView,
-      sceneView: null as unknown as SceneView,
-      activeView: null as unknown as MapView | SceneView,
-      container: "viewDiv"
-    };
- 
-    const initialViewParams = {
-      zoom: 5,
-      center: [2.3522, 48.8566],
-      container: appConfig.container
-    };
- 
     const webmap = new WebMap({
       portalItem: {
-        id: "ce04efd930424dc38b5eff6db0f260d9"
-      }
-    });
- 
-    const scene = new WebScene({
-      portalItem: {
-        id: "828ad330a1424e95b2ac35a5a5491bb0"
-      }
-    });
- 
-    // Create 2D view and set as active
-    const mapViewParams = { ...initialViewParams, map: webmap };
-    appConfig.mapView = this.createView(mapViewParams, MapView);
-    appConfig.activeView = appConfig.mapView;
- 
-    // Create 3D view, won't initialize until container is set
-    const sceneViewParams = { ...initialViewParams, container: null, map: scene };
-    appConfig.sceneView = this.createView(sceneViewParams, SceneView);
- 
-    // Switch the view between 2D and 3D each time the button is clicked
-    switchButton.addEventListener("click", () => {
-      this.switchView(appConfig, switchButton);
+        id: "cbad2d8efb4348cfb14b8dc2e3da30c3" // Replace with your WebMap ID
+      },
+      layers: [this.routeLayer] // Add the routeLayer to the map
     });
 
-    const daylight = new Daylight({
-      view: appConfig.sceneView,
-      // plays the animation twice as fast than the default one
-      playSpeedMultiplier: 2,
-      // disable the timezone selection button
-      visibleElements: {
-        timezone: false
-      }
+    const mapView = new MapView({
+      container: "viewDiv",
+      map: webmap,
+      zoom: 12,
+      center: [2.3522, 48.8566]
     });
- 
-    // Add widget inside an Expand widget to be able to hide it on devices with small screens
-    appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
 
-    // Add widget inside an Expand widget to be able to hide it on devices with small screens
-    appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
+    mapView.on("click", (event) => this.addStop(event));
   }
- 
-  // Switches the view from 2D to 3D and vice versa
-  switchView(appConfig: { mapView: any; sceneView: any; activeView: any; container: any; }, switchButton: HTMLButtonElement): void {
-    const is3D = appConfig.activeView.type === "3d";
-    const activeViewpoint = appConfig.activeView.viewpoint.clone();
- 
-    // Remove the reference to the container for the previous view
-    appConfig.activeView.container = null;
- 
-    if (is3D) {
-      // If the input view is a SceneView, set the viewpoint on the MapView instance.
-      // Set the container on the MapView and flag it as the active view.
-      appConfig.mapView.viewpoint = activeViewpoint;
-      appConfig.mapView.container = appConfig.container;
-      appConfig.activeView = appConfig.mapView;
-      switchButton.innerText = "3D";
-    } else {
-      appConfig.sceneView.viewpoint = activeViewpoint;
-      appConfig.sceneView.container = appConfig.container;
-      appConfig.activeView = appConfig.sceneView;
-      switchButton.innerText = "2D";
+
+  private addStop(event: any): void {
+    const stop = new Graphic({
+      geometry: event.mapPoint,
+      symbol: this.stopSymbol
+    });
+    this.routeLayer.add(stop);
+
+    (this.routeParams.stops as FeatureSet).features.push(stop);
+    if ((this.routeParams.stops as FeatureSet).features.length >= 2) {
+      route.solve(this.routeUrl, this.routeParams).then((data) => this.showRoute(data));
     }
   }
- 
-  // Convenience function for creating either a 2D or 3D view depending on the type parameter
-  createView(params: any, ViewClass: any): any {
-    return new ViewClass(params);
+
+  private showRoute(data: any): void {
+    console.log(data);
+    const routeResult = data.routeResults[0].route;
+    routeResult.symbol = this.routeSymbol;
+    this.routeLayer.add(routeResult);
   }
 }
- 
- 
