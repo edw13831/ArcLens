@@ -53,6 +53,8 @@ export class MapComponent implements OnInit {
       zoom: 12,
       center: [2.3522, 48.8566]
     });
+    // Add widget inside an Expand widget to be able to hide it on devices with small screens
+    appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
 
     mapView.on("click", (event) => this.addStop(event));
   }
