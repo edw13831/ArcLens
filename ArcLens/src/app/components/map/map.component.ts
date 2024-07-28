@@ -5,9 +5,10 @@ import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import RouteParameters from '@arcgis/core/rest/support/RouteParameters';
 import FeatureSet from '@arcgis/core/rest/support/FeatureSet';
 import Graphic from '@arcgis/core/Graphic';
-import * as route from "@arcgis/core/rest/route.js"
+import * as route from "@arcgis/core/rest/route.js";
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol';
+import Search from '@arcgis/core/widgets/Search';
 
 @Component({
   selector: 'app-map',
@@ -25,12 +26,18 @@ export class MapComponent implements OnInit {
     stops: new FeatureSet(),
     outSpatialReference: {
       wkid: 3857
-    }
+    },
+    findBestSequence: true,
   });
 
   private stopSymbol: SimpleMarkerSymbol = new SimpleMarkerSymbol({
     style: "circle",
     size: 7,
+    color: "red",
+    outline: {
+      color: "white",
+      width: 1
+    }
   });
 
   private routeSymbol: SimpleLineSymbol = new SimpleLineSymbol({
@@ -40,21 +47,49 @@ export class MapComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const webmap = new WebMap({
+    const heatmapWebMap = new WebMap({
       portalItem: {
-        id: "cbad2d8efb4348cfb14b8dc2e3da30c3" // Replace with your WebMap ID
-      },
-      layers: [this.routeLayer] // Add the routeLayer to the map
+        id: "c7f0408b3f14470b9a695a03cd39928b" // Replace with your heatmap WebMap ID
+      }
+    });
+
+    const pointWebMap = new WebMap({
+      portalItem: {
+        id: "858a68ae306b4b94a7180c5e20e925e6" // Replace with your point map WebMap ID
+      }
     });
 
     const mapView = new MapView({
       container: "viewDiv",
-      map: webmap,
+      map: heatmapWebMap,
       zoom: 12,
       center: [2.3522, 48.8566]
     });
 
+    // Add the search widget to the map view
+    const searchWidget = new Search({
+      view: mapView
+    });
+    mapView.ui.add(searchWidget, {
+      position: "top-right"
+    });
+
     mapView.on("click", (event) => this.addStop(event));
+    mapView.watch("zoom", (newValue) => this.handleZoomChange(newValue, mapView, heatmapWebMap, pointWebMap));
+  }
+
+  private handleZoomChange(zoom: number, mapView: MapView, heatmapWebMap: WebMap, pointWebMap: WebMap): void {
+    if (zoom > 12) {
+      if (mapView.map !== pointWebMap) {
+        mapView.map = pointWebMap;
+        mapView.map.add(this.routeLayer);
+      }
+    } else {
+      if (mapView.map !== heatmapWebMap) {
+        mapView.map = heatmapWebMap;
+        mapView.map.add(this.routeLayer);
+      }
+    }
   }
 
   private addStop(event: any): void {
