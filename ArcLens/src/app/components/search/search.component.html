@@ -1,10 +1,16 @@
-
 <div class="background">
   <div class="search-bar-container">
     <div class="search-bar">
       <span class="menu-icon">&#9776;</span>
-      <input type="text" placeholder="Search..." (keyup.enter)="onSearch($event)" #searchInput>
-      <span class="search-icon">&#128269;</span>
+      <input matInput type="text" [formControl]="locationControl" [matAutocomplete]="auto" placeholder="Search..."  (keyup.enter)="onSearch()">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+        <mat-option *ngFor="let location of filteredOptions | async" [value]="location" se>
+          {{ location.text }}
+        </mat-option>
+      </mat-autocomplete>
+      <button mat-icon-button onclick="onSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
     </div>
   </div>
 </div>

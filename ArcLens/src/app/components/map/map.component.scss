@@ -1,5 +1,43 @@
-html,
-body,
+#sideContainer {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    height: 100%;
+    padding: 1rem 2rem 0 1rem;
+    margin: 60px 5px 0 0;
+}
+
+.filterSection {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.mat-icon-button {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.mat-icon {
+    color: #555;
+}
+
+.filterMenuContent {
+    padding: 10px;
+}
+
+.mainContainer {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.mapContainer {
+    width: 100%;
+}
+
 #viewDiv {
     padding: 0;
     margin: 0;
@@ -7,13 +45,70 @@ body,
     width: 100%;
 }
 
-#infoDiv {
-    position: absolute;
-    top: 15px;
-    left: 60px;
+.background {
+    background-color: rgb(255, 241, 231);
+    background-image: url('Homescreen.png'); /* Use your background image */
+    height: 100%;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: 80% 100%; /* This will cover the entire container without compressing */
 }
 
-#infoDiv input {
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px;
+.searchSection input {
+    width: 18rem;
+    padding: 10px;
+    margin: 10px 0;
+    color: #000000;
+    border: 1px solid #ddd;
+    background-color: #ffe3d8;
+    border-radius: 50px;
+}
+
+.resultsSection {
+    margin-top: 50px;
+}
+
+.result {
+    width: 20rem;
+    display: flex;
+    align-items: center;
+    margin: 0 5px 25px 0;
+    padding: 10px;
+    background-color: #ffe3d8;
+    border-radius: 10px;
+    border: #55555560 0.5px solid;
+}
+
+.resultIcon {
+    font-size: 16px;
+    font-weight: lighter;
+    margin-right: 10px;
+    background-color: #ff5a36;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resultDetails {
+    flex: 1;
+}
+
+.resultDetails p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.resultDetails span {
+    font-size: 14px;
+    color: #555;
+}
+
+.result img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
 }

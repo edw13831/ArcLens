@@ -1,7 +1,63 @@
-<div id="viewDiv"></div>
-<div id="infoDiv">
-    <input class="esri-component esri-widget--button esri-widget esri-interactive" type="button" id="switch-btn"
-        value="3D" />
-</div>
+<div class="background">
+    <div class="mainContainer">
+      <div id="sideContainer">
+        <div class="filterSection">
+            <button mat-icon-button [matMenuTriggerFor]="filterMenu">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #filterMenu="matMenu">
+              <div class="filterMenuContent">
+                <p>Filters</p>
+                <ng-container *ngFor="let option of filterOptions">
+                  <mat-checkbox (click)="doSomething($event)">{{ option.label }}</mat-checkbox>
+                </ng-container>
+                <a mat-menu-item (click)="showMore()">Show more...</a>
+              </div>
+            </mat-menu>
+          </div>
 
+
+        <div class="searchSection">
+          <input type="text" id="destination" placeholder="Paris, France">
+          <input type="text" id="hotel" placeholder="Le Parisis Hôtel, 102 Bd de Grenelle, Paris...">
+          <input type="text" id="route" placeholder="Rue Bueno-Ayres">
+        </div>
+        
+        <div class="resultsSection">
+          <div class="result">
+            <div class="resultIcon">A</div>
+            <div class="resultDetails">
+              <p>Rue Buenos-Ayres</p>
+              <span>1.1km / 16 minutes</span>
+            </div>
+          </div>
+          <div class="result">
+            <div class="resultIcon">B</div>
+            <div class="resultDetails">
+              <p>Rue Cler</p>
+              <span>1.2km / 17 minutes</span>
+            </div>
+          </div>
+          <div class="result">
+            <div class="resultIcon">C</div>
+            <div class="resultDetails">
+              <p>Bucherer Clock Shop</p>
+              <span>2.6km / 35 minutes</span>
+            </div>
+          </div>
+          <div class="result">
+            <div class="resultIcon">D</div>
+            <div class="resultDetails">
+              <p>Louvre Pyramid</p>
+              <span>4.2km / 55 minutes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mapContainer">
+        <div id="viewDiv"></div>
+        <div id="infoDiv"></div>
+      </div>
+    </div>
+  </div>
   
