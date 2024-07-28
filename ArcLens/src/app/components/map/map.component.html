@@ -1,7 +1,52 @@
-<div id="viewDiv"></div>
-<div id="infoDiv">
-    <input class="esri-component esri-widget--button esri-widget esri-interactive" type="button" id="switch-btn"
-        value="3D" />
-</div>
+<div class="background">
+  <div class="mainContainer">
+    <div id="sideContainer">
+      <div class="headerSection">
+        <h3>Your photo itinerary</h3>
+        <div class="controls">
+          <button mat-icon-button [matMenuTriggerFor]="filterMenu">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+          <mat-icon (click)="toggleFavoritesFilter()">favorite</mat-icon>
+        </div>
+      </div>
 
-  
+      <div class="filterSection">
+        <mat-menu #filterMenu="matMenu">
+          <div class="filterMenuContent">
+            <p>Filters</p>
+            <ng-container *ngFor="let option of filterOptions">
+              <mat-checkbox (click)="doSomething($event)">{{ option.label }}</mat-checkbox>
+            </ng-container>
+            <a mat-menu-item (click)="showMore()">Show more...</a>
+          </div>
+        </mat-menu>
+      </div>
+
+      <div class="searchSection">
+        <input type="text" id="destination" placeholder="Paris, France">
+        <input type="text" id="hotel" placeholder="Le Parisis Hôtel, 102 Bd de Grenelle, Paris...">
+      </div>
+
+      <div class="resultsSection">
+        <ng-container *ngFor="let result of results; let i = index">
+          <div class="result" *ngIf="result.visible">
+            <div class="resultIcon">{{ result.icon }}</div>
+            <div class="resultDetails">
+              <p>{{ result.name }}</p>
+              <span>{{ result.distance }}</span>
+            </div>
+            <button mat-icon-button (click)="toggleFavorite(i)">
+              <mat-icon>{{ result.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="mapContainer">
+      <div id="viewDiv"></div>
+      <div id="infoDiv"></div>
+    </div>
+    <app-signup></app-signup>
+  </div>
+</div>

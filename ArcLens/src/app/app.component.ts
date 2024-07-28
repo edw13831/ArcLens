@@ -4,11 +4,13 @@ import { MapComponent } from "./components/map/map.component";
 import { SearchComponent } from "./components/search/search.component";
 import { CommonModule } from '@angular/common';
 import { routeProviders } from './app.routes';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { SignupComponent } from './components/signup/signup.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MapComponent, SearchComponent, CommonModule],
+  imports: [RouterOutlet, MapComponent, SearchComponent, CommonModule,MatIconModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
