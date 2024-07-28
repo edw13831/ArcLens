@@ -17,41 +17,41 @@ import Expand from '@arcgis/core/widgets/Expand';
 export class MapComponent implements OnInit {
   ngOnInit(): void {
     const switchButton = document.getElementById('switch-btn') as HTMLButtonElement;
-
+ 
     const appConfig = {
       mapView: null as unknown as MapView,
       sceneView: null as unknown as SceneView,
       activeView: null as unknown as MapView | SceneView,
       container: "viewDiv"
     };
-
+ 
     const initialViewParams = {
-      zoom: 12,
-      center: [-122.43759993450347, 37.772798684981126],
+      zoom: 5,
+      center: [2.3522, 48.8566],
       container: appConfig.container
     };
-
+ 
     const webmap = new WebMap({
       portalItem: {
-        id: "a2ded8d0bf4245e4923b898af67b8291"
+        id: "ce04efd930424dc38b5eff6db0f260d9"
       }
     });
-
+ 
     const scene = new WebScene({
       portalItem: {
         id: "828ad330a1424e95b2ac35a5a5491bb0"
       }
     });
-
+ 
     // Create 2D view and set as active
     const mapViewParams = { ...initialViewParams, map: webmap };
     appConfig.mapView = this.createView(mapViewParams, MapView);
     appConfig.activeView = appConfig.mapView;
-
+ 
     // Create 3D view, won't initialize until container is set
     const sceneViewParams = { ...initialViewParams, container: null, map: scene };
     appConfig.sceneView = this.createView(sceneViewParams, SceneView);
-
+ 
     // Switch the view between 2D and 3D each time the button is clicked
     switchButton.addEventListener("click", () => {
       this.switchView(appConfig, switchButton);
@@ -66,19 +66,22 @@ export class MapComponent implements OnInit {
         timezone: false
       }
     });
+ 
+    // Add widget inside an Expand widget to be able to hide it on devices with small screens
+    appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
 
     // Add widget inside an Expand widget to be able to hide it on devices with small screens
     appConfig.sceneView.ui.add(new Expand({ content: daylight, view: appConfig.sceneView, expanded: true }), "top-right");
   }
-
+ 
   // Switches the view from 2D to 3D and vice versa
   switchView(appConfig: { mapView: any; sceneView: any; activeView: any; container: any; }, switchButton: HTMLButtonElement): void {
     const is3D = appConfig.activeView.type === "3d";
     const activeViewpoint = appConfig.activeView.viewpoint.clone();
-
+ 
     // Remove the reference to the container for the previous view
     appConfig.activeView.container = null;
-
+ 
     if (is3D) {
       // If the input view is a SceneView, set the viewpoint on the MapView instance.
       // Set the container on the MapView and flag it as the active view.
@@ -93,9 +96,11 @@ export class MapComponent implements OnInit {
       switchButton.innerText = "2D";
     }
   }
-
+ 
   // Convenience function for creating either a 2D or 3D view depending on the type parameter
   createView(params: any, ViewClass: any): any {
     return new ViewClass(params);
   }
 }
+ 
+ 
